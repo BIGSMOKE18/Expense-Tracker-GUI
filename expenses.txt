@@ -1,0 +1,3 @@
+20 - Food
+30 - Transport
+100 - Others

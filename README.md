@@ -12,15 +12,14 @@ Handle errors gracefully to enhance user experience.
 
 Features
 
-✅ User-friendly GUI (Java Swing)
-✅ Expense Entry (Amount & Category selection)
-✅ View Expenses (List expenses in a text area)
-✅ File Persistence (Save & Load expenses from a file)
-✅ Exception Handling (Prevents invalid inputs)
+✅ Add Expense – Enter amount and category
+✅ View Expenses – Display all recorded expenses
+✅ Sort Expenses – Sort by amount in ascending order
+✅ Filter Expenses – Show expenses of a specific category
+✅ Category-wise Summation – Calculate total expenses per category
+✅ Data Persistence – Save and load expenses from a file
 
 Future Enhancements
 
 🔹 User Registration/Login
-🔹 Sorting & Filtering Expenses
-🔹 Category-wise Summation
 🔹 Enhanced UI with Tables

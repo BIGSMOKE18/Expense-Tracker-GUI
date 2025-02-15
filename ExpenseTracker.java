@@ -1,15 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.*;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ExpenseTracker {
     private JFrame frame;
     private JTextField amountField;
     private JComboBox<String> categoryBox;
-    private JButton addButton, viewButton;
+    private JButton addButton, viewButton, sortButton, filterButton, sumButton;
     private JTextArea displayArea;
     
     private ArrayList<String> expenses;
@@ -17,7 +18,7 @@ public class ExpenseTracker {
     
     public ExpenseTracker() {
         frame = new JFrame("Expense Tracker");
-        frame.setSize(400, 400);
+        frame.setSize(500, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new FlowLayout());
         
@@ -30,23 +31,20 @@ public class ExpenseTracker {
         
         addButton = new JButton("Add Expense");
         viewButton = new JButton("View Expenses");
-        displayArea = new JTextArea(10, 30);
+        sortButton = new JButton("Sort by Amount");
+        filterButton = new JButton("Filter by Category");
+        sumButton = new JButton("Category-wise Summation");
+        displayArea = new JTextArea(15, 40);
         displayArea.setEditable(false);
         
         expenses = new ArrayList<>();
         loadExpenses();
         
-        addButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                addExpense();
-            }
-        });
-        
-        viewButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                viewExpenses();
-            }
-        });
+        addButton.addActionListener(e -> addExpense());
+        viewButton.addActionListener(e -> viewExpenses());
+        sortButton.addActionListener(e -> sortExpenses());
+        filterButton.addActionListener(e -> filterExpenses());
+        sumButton.addActionListener(e -> categorySummation());
         
         frame.add(amountLabel);
         frame.add(amountField);
@@ -54,6 +52,9 @@ public class ExpenseTracker {
         frame.add(categoryBox);
         frame.add(addButton);
         frame.add(viewButton);
+        frame.add(sortButton);
+        frame.add(filterButton);
+        frame.add(sumButton);
         frame.add(new JScrollPane(displayArea));
         
         frame.setVisible(true);
@@ -79,6 +80,37 @@ public class ExpenseTracker {
         displayArea.setText("Expenses:\n");
         for (String exp : expenses) {
             displayArea.append(exp + "\n");
+        }
+    }
+    
+    private void sortExpenses() {
+        expenses.sort(Comparator.comparingInt(e -> Integer.parseInt(e.split(" - ")[0])));
+        viewExpenses();
+    }
+    
+    private void filterExpenses() {
+        String category = (String) categoryBox.getSelectedItem();
+        List<String> filtered = expenses.stream()
+                .filter(e -> e.endsWith(category))
+                .collect(Collectors.toList());
+        displayArea.setText("Filtered Expenses:\n");
+        for (String exp : filtered) {
+            displayArea.append(exp + "\n");
+        }
+    }
+    
+    private void categorySummation() {
+        Map<String, Integer> categorySum = new HashMap<>();
+        for (String exp : expenses) {
+            String[] parts = exp.split(" - ");
+            int amount = Integer.parseInt(parts[0]);
+            String category = parts[1];
+            categorySum.put(category, categorySum.getOrDefault(category, 0) + amount);
+        }
+        
+        displayArea.setText("Category-wise Summation:\n");
+        for (Map.Entry<String, Integer> entry : categorySum.entrySet()) {
+            displayArea.append(entry.getKey() + ": " + entry.getValue() + "\n");
         }
     }
     

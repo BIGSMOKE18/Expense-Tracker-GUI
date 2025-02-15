@@ -1,3 +1,7 @@
 20 - Food
 30 - Transport
 100 - Others
+75 - Food
+60 - Entertainment
+25 - Transport
+25 - Food
